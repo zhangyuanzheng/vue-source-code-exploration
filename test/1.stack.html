@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栈相关</title>
+</head>
+<body></body>
+<script>
+    /**
+     * 试编写 “智能重复” smartRepeat函数，实现：
+     * 将3[abc] 变成 abcabcabc
+     * 将3[2[a]2[b]]变为 aabbaabbaabb
+     * 
+     * 假定输入字符全是合法的
+    */
+
+    /**
+     * 思路
+     * 1.创建2个栈（一个用来存放字符循环次数的数字，一个用来存放字符），并遍历整个字符串。 
+     * 2.如果字符是数字，那么就把数字压入栈1，并向栈2压入一个空字符串
+     * 3.如果字符是字母，那么就将栈2 栈顶对应项改为这个字母
+     * 4.如果字符是']'，那么就将栈1中数字出栈，并把栈2中栈顶元素重复刚刚那个次数，出栈，然后拼接到新栈顶上
+    */
+
+    function smartRepeat(tempStr){
+        let idx = 0; //指针
+        let stack1 = [];
+        let stack2 = [];
+        let rest = tempStr; 
+        while(idx < tempStr.length){
+            rest = tempStr.substring(idx); //剩余部分
+            //看当前剩余部分是不是以数字和[开头
+            if(/^\d+\[/.test(rest)){
+                let times = rest.match(/^(\d+)\[/)[1];
+                stack1.push(Number(times));
+                stack2.push("");
+                //让指针后移，times这个数字是 多少位 就让移动 多少位+1 位
+                //也就是移动到 [ 的对应下标
+                idx+= times.length+1;
+            }else if(/^\w+\]/.test(rest)){
+                //如果这个字符是字母，那么就将栈顶改为这个字母
+                let word = rest.match(/^(\w+)\]/)[1];
+                stack2.pop();
+                stack2.push(word);
+                idx += word.length;
+            }else if(rest[0] === ']'){
+                let times = stack1.pop();
+                let word = stack2.pop();
+                const stackTop = stack2.length? stack2.pop() : ""
+                stack2.push(stackTop.concat(word.repeat(times)));
+                idx++;
+            }
+            console.log(idx, stack1, stack2)
+        }
+        return stack2.join();
+    }
+    console.log(smartRepeat("3[2[a]2[b]]"))
+</script>
+</html>
