@@ -47,7 +47,7 @@
             }else if(rest[0] === ']'){
                 let times = stack1.pop();
                 let word = stack2.pop();
-                const stackTop = stack2.length? stack2.pop() : ""
+                const stackTop = stack2.length? stack2.pop() : "" //考虑最后 栈2空了的case
                 stack2.push(stackTop.concat(word.repeat(times)));
                 idx++;
             }
